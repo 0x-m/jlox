@@ -15,6 +15,9 @@
 package jlox;
 
 import jlox.Expr.Binary;
+import jlox.Expr.Grouping;
+import jlox.Expr.Literal;
+import jlox.Expr.Unary;
 
 class AstPrinter implements Expr.Visitor<String> {
     String print(Expr expr) {
@@ -23,26 +26,38 @@ class AstPrinter implements Expr.Visitor<String> {
 
     @Override
     public String visitBinaryExpr(Binary expr) {
-        // TODO Auto-generated method stub
-        return null;
+
+        return parenthesize(expr.operator.lexeme, expr.left, expr.right);
     }
 
     @Override
     public String visitGroupingExpr(Grouping expr) {
-        // TODO Auto-generated method stub
-        return null;
+        return parenthesize("group", expr.expression);
     }
 
     @Override
     public String visitLiteralExpr(Literal expr) {
-        // TODO Auto-generated method stub
-        return null;
+        if (expr.value == null)
+            return "nil";
+
+        return expr.value.toString();
     }
 
     @Override
     public String visitUnaryExpr(Unary expr) {
-        // TODO Auto-generated method stub
-        return null;
+        return parenthesize(expr.operator.lexeme, expr.right);
     }
 
+    private String parenthesize(String name, Expr... exprs) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("(").append(name);
+        for (Expr expr : exprs) {
+            builder.append(" ");
+            builder.append(expr.accept(this));
+        }
+        builder.append(")");
+
+        return builder.toString();
+    }
 }

@@ -27,10 +27,10 @@ public class GenerateAST {
         }
         String outputDir = args[0];
         defineAst(outputDir, "Expr", Arrays.asList(
-                "Binary : Expr left, Token operator, Expr right",
+                "Binary : Expr left,Token operator,Expr right",
                 "Grouping : Expr expression",
                 "Literal : Object value",
-                "Unary : Token operator, Expr right"));
+                "Unary : Token operator,Expr right"));
     }
 
     private static void defineAst(String outputDir, String baseName, List<String> types)
@@ -44,7 +44,9 @@ public class GenerateAST {
         writer.println("import java.util.List;");
         writer.println();
         writer.println("abstract class " + baseName + " {");
+
         defineVisitor(writer, baseName, types);
+
         // The AST classes.
         for (String type : types) {
             String className = type.split(":")[0].trim();
@@ -75,10 +77,11 @@ public class GenerateAST {
 
         // Visitor pattern.
         writer.println();
-        writer.println("    @override");
+        writer.println("    @Override");
         writer.println("    <R> R accept(Visitor<R> visitor) {");
         writer.println("    return visitor.visit" +
                 className + baseName + "(this);");
+        writer.println("  }");
         // Fields
         writer.println();
         for (String field : fields) {

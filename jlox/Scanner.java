@@ -118,6 +118,21 @@ public class Scanner {
                     // A comment goes untill the end of the line.
                     while (peek() != '\n' && !isAtEnd())
                         advance();
+                } else if (match('*')) {
+                    while (!isAtEnd()) {
+                        if (peek() == '*' && peekNext() == '/') {
+                            break;
+                        }
+                        if (peek() == '\n')
+                            line++;
+                        advance();
+                    }
+                    if (isAtEnd()) {
+                        lox.error(line, "'*/' expected.");
+                    } else {
+                        advance();
+                        advance();
+                    }
                 } else {
                     addToken(SLASH);
                 }

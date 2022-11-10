@@ -22,9 +22,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import jlox.Interpreter.RuntimeError;
+
 public class lox {
 
     static boolean hadError = false;
+    static boolean hadRunTimeError = false;
+
+    private static final Interpreter interpreter = new Interpreter();
 
     public static void main(String[] args) throws IOException {
         if (args.length > 1) {
@@ -42,6 +47,8 @@ public class lox {
         run(new String(bytes, Charset.defaultCharset()));
         if (hadError)
             System.exit(65);
+        if (hadRunTimeError)
+            System.exit(70);
 
     }
 
@@ -68,6 +75,7 @@ public class lox {
         Expr expression = parser.parse();
         if (hadError)
             return;
+        interpreter.interpret(expression);
 
         System.out.println(new AstPrinter().print(expression));
     }
@@ -88,5 +96,11 @@ public class lox {
         } else {
             report(token.line, "at '" + token.lexeme + "' ", message);
         }
+    }
+
+    static void runTimeError(RuntimeError error) {
+        System.out.println(error.getMessage() +
+                "\n[line " + error.token.line + "]");
+        hadRunTimeError = true;
     }
 }

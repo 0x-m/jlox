@@ -14,7 +14,11 @@
 
 package jlox;
 
-class Interpreter implements Expr.Visitor<Object> {
+import static jlox.TokenType.*;
+
+import java.util.List;
+
+public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     class RuntimeError extends RuntimeException {
         final Token token;
@@ -25,14 +29,19 @@ class Interpreter implements Expr.Visitor<Object> {
         }
     }
 
-    void interpret(Expr expression) {
+    void interpret(List<Stmt> statements) {
         try {
-            Object value = evaluate(expression);
-            System.out.println(stringfy(value));
+            for (Stmt statement : statements) {
+                execute(statement);
+            }
 
         } catch (RuntimeError error) {
-            lox.runTimeError(error);
+            Lox.runTimeError(error);
         }
+    }
+
+    private void execute(Stmt stmt) {
+        stmt.accept(this);
     }
 
     private String stringfy(Object object) {
@@ -75,6 +84,8 @@ class Interpreter implements Expr.Visitor<Object> {
             case BANG:
                 checkNumberOperand(expr.operator, expr, right);
                 return !isTruthy(right);
+            default:
+                break;
         }
 
         // Unreachable
@@ -126,6 +137,19 @@ class Interpreter implements Expr.Visitor<Object> {
         return null;
     }
 
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt) {
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Stmt.Print stmt) {
+        Object value = evaluate(stmt.expression);
+        System.out.println(stringfy(value));
+        return null;
+    }
+
     private boolean isEqual(Object a, Object b) {
         if (a == null && b == null)
             return true;
@@ -155,4 +179,5 @@ class Interpreter implements Expr.Visitor<Object> {
 
         throw new RuntimeError(operator, "operands must be numbers.");
     }
+
 }

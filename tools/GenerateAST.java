@@ -31,6 +31,10 @@ public class GenerateAST {
                 "Grouping : Expr expression",
                 "Literal : Object value",
                 "Unary : Token operator,Expr right"));
+
+        defineAst(outputDir, "Stmt", Arrays.asList(
+                "Expression : Expr expression",
+                "Print : Expr expression"));
     }
 
     private static void defineAst(String outputDir, String baseName, List<String> types)

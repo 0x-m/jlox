@@ -22,9 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import jlox.Interpreter.RuntimeError;
-
-public class lox {
+public class Lox {
 
     static boolean hadError = false;
     static boolean hadRunTimeError = false;
@@ -72,12 +70,11 @@ public class lox {
         Scanner scanner = new Scanner(source);
         List<Token> tokens = scanner.scanTokens();
         Parser parser = new Parser(tokens);
-        Expr expression = parser.parse();
+        List<Stmt> statements = parser.parse();
         if (hadError)
             return;
-        interpreter.interpret(expression);
+        interpreter.interpret(statements);
 
-        System.out.println(new AstPrinter().print(expression));
     }
 
     static void error(int line, String message) {
@@ -98,7 +95,7 @@ public class lox {
         }
     }
 
-    static void runTimeError(RuntimeError error) {
+    static void runTimeError(Interpreter.RuntimeError error) {
         System.out.println(error.getMessage() +
                 "\n[line " + error.token.line + "]");
         hadRunTimeError = true;

@@ -14,12 +14,12 @@
 
 package jlox;
 
+import static jlox.TokenType.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static jlox.TokenType.*;
 
 public class Scanner {
     private final String source;
@@ -128,7 +128,7 @@ public class Scanner {
                         advance();
                     }
                     if (isAtEnd()) {
-                        lox.error(line, "'*/' expected.");
+                        Lox.error(line, "'*/' expected.");
                     } else {
                         advance();
                         advance();
@@ -155,7 +155,7 @@ public class Scanner {
                 } else if (isAlpha(c)) {
                     identifier();
                 } else {
-                    lox.error(line, "Unexpected character");
+                    Lox.error(line, "Unexpected character");
                 }
                 break;
         }
@@ -206,7 +206,7 @@ public class Scanner {
         }
 
         if (isAtEnd()) {
-            lox.error(line, "Unterminated string.");
+            Lox.error(line, "Unterminated string.");
             return;
         }
         advance(); // The closing ".

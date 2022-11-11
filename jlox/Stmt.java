@@ -2,38 +2,62 @@ package jlox;
 
 import java.util.List;
 
-public abstract class Stmt {
-  interface Visitor<R> {
+abstract class Stmt {
+ interface Visitor<R> {
+    R visitBlockStmt(Block stmt);
     R visitExpressionStmt(Expression stmt);
-
     R visitPrintStmt(Print stmt);
-  }
-
-  static class Expression extends Stmt {
-    Expression(Expr expression) {
-      this.expression = expression;
+    R visitVarStmt(Var stmt);
     }
+ static class Block extends Stmt {
+  Block(List<Stmt> statements) {
+    this.statements = statements;
+  }
 
     @Override
     <R> R accept(Visitor<R> visitor) {
-      return visitor.visitExpressionStmt(this);
-    }
-
-    final Expr expression;
+    return visitor.visitBlockStmt(this);
   }
 
-  static class Print extends Stmt {
-    Print(Expr expression) {
-      this.expression = expression;
+    final List<Stmt> statements;
     }
+ static class Expression extends Stmt {
+  Expression(Expr expression) {
+    this.expression = expression;
+  }
 
     @Override
     <R> R accept(Visitor<R> visitor) {
-      return visitor.visitPrintStmt(this);
-    }
-
-    final Expr expression;
+    return visitor.visitExpressionStmt(this);
   }
 
-  abstract <R> R accept(Visitor<R> visitor);
+    final Expr expression;
+    }
+ static class Print extends Stmt {
+  Print(Expr expression) {
+    this.expression = expression;
+  }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitPrintStmt(this);
+  }
+
+    final Expr expression;
+    }
+ static class Var extends Stmt {
+  Var(Token name, Expr initializer) {
+    this.name = name;
+    this.Expr = Expr;
+  }
+
+    @Override
+    <R> R accept(Visitor<R> visitor) {
+    return visitor.visitVarStmt(this);
+  }
+
+    final Token name;
+    final  Expr initializer;
+    }
+ abstract <R> R accept(Visitor<R> visitor);
 }

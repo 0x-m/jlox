@@ -44,10 +44,10 @@ abstract class Expr {
     final Expr right;
     }
  static class Call extends Expr {
-  Call(Expr calle, Token paren, List<Expr> arguments) {
+  Call(Expr calle,Token paren,List<Expr> arguments) {
     this.calle = calle;
-    this.Token = Token;
-    this.List<Expr> = List<Expr>;
+    this.paren = paren;
+    this.arguments = arguments;
   }
 
     @Override
@@ -56,8 +56,8 @@ abstract class Expr {
   }
 
     final Expr calle;
-    final  Token paren;
-    final  List<Expr> arguments;
+    final Token paren;
+    final List<Expr> arguments;
     }
  static class Grouping extends Expr {
   Grouping(Expr expression) {

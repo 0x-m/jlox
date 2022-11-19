@@ -1,5 +1,4 @@
 # Introduction
-Simple lox interpreter written in java, followed the book: Crafting interpreter.
-(Implementing a programming language is a real test of programming skills.!)
+A simple **recursive decent parser** + **tree-walk interpreter** written in java for lox programming language based on the book **Crafting interpreters**
 
 
